@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martin Ndegwa Moche - WordPress Developer</title>
+    <meta name="description"
+        content="Martin Ndegwa Moche - Dynamic WordPress Developer from Nairobi, Kenya. Specializing in custom themes, plugins, and high-performance websites.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --border: #e5e7eb;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(37, 99, 235, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --text-dark: #f9fafb;
+            --text-light: #d1d5db;
+            --background: #111827;
+            --surface: #1f2937;
+            --border: #374151;
+            --card-bg: #1f2937;
+            --header-bg: rgba(31, 41, 55, 0.95);
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(37, 99, 235, 0.25);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--background);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px var(--shadow-hover);
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100%;
+            background: var(--card-bg);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            padding: 2rem;
+            border-left: 1px solid var(--border);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            display: block;
+            padding: 1rem 0;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color)10, transparent);
+            opacity: 0.05;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-dark), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .contact-item i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 8px solid var(--primary-color);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Skills Section */
+        .skills {
+            background: var(--surface);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--surface);
+            color: var(--text-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Experience Section */
+        .experience-timeline {
+            position: relative;
+            margin-left: 2rem;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            border: 3px solid var(--background);
+            box-shadow: 0 0 0 3px var(--primary-color);
+        }
+
+        .timeline-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .timeline-content:hover {
+            transform: translateX(10px);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-header h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .timeline-date {
+            background: var(--surface);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
+        .company {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .achievements {
+            list-style: none;
+        }
+
+        .achievements li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-light);
+        }
+
+        .achievements li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Enhanced Projects Section */
+        .projects {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+            position: relative;
+        }
+
+        .projects::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px var(--shadow-hover);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .project-card:hover .project-header::after {
+            right: 100%;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-title i {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .project-url {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .project-url i {
+            font-size: 0.8rem;
+        }
+
+        .project-content {
+            padding: 2.5rem;
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .project-summary {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .project-tech-stack {
+            margin-bottom: 2rem;
+        }
+
+        .tech-stack-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .project-features {
+            list-style: none;
+        }
+
+        .project-features li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .project-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 80px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-info {
+                justify-content: center;
+            }
+
+            .profile-pic {
+                width: 250px;
+                height: 250px;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .timeline-item {
+                padding-left: 2rem;
+            }
+
+            .timeline-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .project-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">Moche Dev</div>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">Moche Dev</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text slide-in-left">
+                        <h1>Martin Ndegwa Moche</h1>
+                        <div class="subtitle">WordPress Developer</div>
+                        <p>Dynamic and innovative WordPress Developer with 15+ years of experience crafting top-tier,
+                            efficient websites. Specializing in custom themes, plugins, and leveraging AI tools to
+                            streamline workflows and deliver exceptional results.</p>
+
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+254 726 223 788</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>ndegwamoche@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Nairobi, Kenya</span>
+                            </div>
+                        </div>
+
+                        <div class="cta-buttons">
+                            <a href="#projects" class="btn btn-primary">
+                                <i class="fas fa-eye"></i>
+                                View Projects
+                            </a>
+                            <a href="https://linkedin.com/in/ndegwamoche" class="btn btn-outline" target="_blank">
+                                <i class="fab fa-linkedin"></i>
+                                LinkedIn Profile
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hero-image slide-in-right">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                            alt="Martin Ndegwa Moche" class="profile-pic">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>About Me</h2>
+                    <p>Passionate about creating exceptional web experiences and driving business growth through
+                        innovative solutions</p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-light); margin-bottom: 2rem;">
+                        With extensive experience in web design and development, I specialize in crafting top-tier,
+                        efficient websites with a focus on exceptional outcomes. I'm proficient in PHP, jQuery,
+                        TypeScript, JavaScript, CSS, and modern frameworks like React JS to create visually appealing,
+                        responsive, and user-centric websites.
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-light);">
+                        I'm skilled in leveraging AI tools to streamline workflows, enhance design accuracy, and drive
+                        smarter development processes. This enables faster prototyping, intelligent automation, and
+                        optimized performance — contributing to superior project outcomes and client satisfaction. Known
+                        for thriving in results-driven environments and consistently exceeding expectations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="skills fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Skills & Expertise</h2>
+                    <p>Comprehensive technical skills developed through years of hands-on experience</p>
+                </div>
+
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3><i class="fab fa-wordpress"></i> WordPress & CMS</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">WordPress</span>
+                            <span class="skill-tag">Custom Themes</span>
+                            <span class="skill-tag">Custom Plugins</span>
+                            <span class="skill-tag">WooCommerce</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-code"></i> Programming Languages</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">PHP</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">TypeScript</span>
+                            <span class="skill-tag">jQuery</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fab fa-react"></i> Frontend Technologies</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">React JS</span>
+                            <span class="skill-tag">JSX</span>
+                            <span class="skill-tag">CSS & SCSS</span>
+                            <span class="skill-tag">Responsive Design</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-database"></i> Backend & Database</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">MySQL</span>
+                            <span class="skill-tag">REST API</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Composer</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-tools"></i> Development Tools</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">GitHub</span>
+                            <span class="skill-tag">Package Managers</span>
+                            <span class="skill-tag">Website Deployment</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3><i class="fas fa-robot"></i> Modern Technologies</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">AI Tools</span>
+                            <span class="skill-tag">ChatGPT</span>
+                            <span class="skill-tag">GitHub Copilot</span>
+                            <span class="skill-tag">SEO Best Practices</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Professional Experience</h2>
+                    <p>15+ years of delivering exceptional WordPress solutions across diverse industries</p>
+                </div>
+
+                <div class="experience-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div>
+                                    <h3>WordPress Plugin Developer</h3>
+                                    <div class="company">NTS Computers Technology BV · Remote</div>
+                                </div>
+                                <div class="timeline-date">Aug 2019 - Present</div>
+                            </div>
+                            <ul class="achievements">
+                                <li>Led development of 15+ high-performance WordPress websites, achieving 50% average
+                                    increase in site traffic</li>
+                                <li>Managed end-to-end migration of legacy PHP sites to WordPress with complete data
+                                    integrity</li>
+                                <li>Integrated advanced third-party APIs, boosting site capabilities by 40%</li>
+                                <li>Developed custom plugins and themes meeting specific client needs</li>
+                                <li>Implemented SEO strategies resulting in 35% improvement in organic search rankings
+                                </li>
+                                <li>Optimized website performance, reducing load times by 30%</li>
+                                <li>Mentored junior developers and managed Git-based workflows</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div>
+                                    <h3>WordPress Developer</h3>
+                                    <div class="company">Fact Finders Pro · Remote</div>
+                                </div>
+                                <div class="timeline-date">Apr 2025 - Jun 2025</div>
+                            </div>
+                            <ul class="achievements">
+                                <li>Designed and implemented new features for WordPress websites</li>
+                                <li>Converted comprehensive layouts and wireframes into working WordPress themes</li>
+                                <li>Ensured high-performance and availability of WordPress sites</li>
+                                <li>Collaborated with design team on UI/UX technical feasibility</li>
+                                <li>Implemented responsive design principles for optimal device compatibility</li>
+                                <li>Performed regular security audits and implemented protective measures</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div>
+                                    <h3>WordPress Developer</h3>
+                                    <div class="company">Tradestar Kenya Ltd · Full-time</div>
+                                </div>
+                                <div class="timeline-date">Jul 2012 - Jul 2019</div>
+                            </div>
+                            <ul class="achievements">
+                                <li>Developed and maintained 10+ WordPress & PHP websites</li>
+                                <li>Customized 20+ themes and plugins to meet client specifications</li>
+                                <li>Implemented website enhancements resulting in 40% increase in user engagement</li>
+                                <li>Ensured mobile-friendly and cross-browser compatibility</li>
+                                <li>Integrated third-party APIs including payment gateways and social media feeds</li>
+                                <li>Managed version control using Git for efficient collaboration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="projects fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Latest Projects</h2>
+                    <p>Recent work showcasing expertise in WordPress development and innovative solutions</p>
+                </div>
+
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title">
+                                <i class="fas fa-table-tennis"></i>
+                                Brønshøj Table Tennis Club
+                            </div>
+                            <div class="project-url">
+                                <i class="fas fa-external-link-alt"></i>
+                                www.bronshojbordtennis.dk/events/
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-description">WordPress Plugin for The Events Calendar Integration</div>
+                            <div class="project-summary">
+                                Developed a custom WordPress plugin to scrape tournament data from bordtennisportalen.dk
+                                and display home match schedules in The Events Calendar, informing members about
+                                training room availability and maintaining historical game records.
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <div class="tech-stack-title">Technologies Used</div>
+                                <div class="tech-tags">
+                                    <span class="tech-tag">WordPress</span>
+                                    <span class="tech-tag">PHP</span>
+                                    <span class="tech-tag">Web Scraping</span>
+                                    <span class="tech-tag">MySQL</span>
+                                    <span class="tech-tag">Events Calendar</span>
+                                </div>
+                            </div>
+
+                            <ul class="project-features">
+                                <li>Web scraping functionality for dynamic match details extraction</li>
+                                <li>GUI settings with configurable filters and manual re-scraping</li>
+                                <li>Color-coded tournament levels for clear calendar visualization</li>
+                                <li>Automated nightly scrapes with comprehensive logging system</li>
+                                <li>Minimalist design with info boxes and standings integration</li>
+                            </ul>
+
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">2025</span>
+                                    <span class="stat-label">Season Coverage</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">100%</span>
+                                    <span class="stat-label">Data Accuracy</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">24/7</span>
+                                    <span class="stat-label">Automated Updates</span>
+                                </div>
+                            </div>
+
+                            <a href="https://www.bronshojbordtennis.dk/events/" class="project-link" target="_blank">
+                                View Live Site <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title">
+                                <i class="fas fa-couch"></i>
+                                Blackbean Interiors
+                            </div>
+                            <div class="project-url">
+                                <i class="fas fa-external-link-alt"></i>
+                                www.blackbeaninteriors.co.ke
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-description">Elegant Interior Design WooCommerce Store</div>
+                            <div class="project-summary">
+                                Built an elegant, fast, and user-friendly eCommerce website for interior design
+                                solutions in Nairobi, Kenya, featuring custom product displays and M-Pesa payment
+                                integration for local customers.
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <div class="tech-stack-title">Technologies Used</div>
+                                <div class="tech-tags">
+                                    <span class="tech-tag">WordPress</span>
+                                    <span class="tech-tag">WooCommerce</span>
+                                    <span class="tech-tag">M-Pesa API</span>
+                                    <span class="tech-tag">PHP</span>
+                                    <span class="tech-tag">MySQL</span>
+                                    <span class="tech-tag">SEO</span>
+                                </div>
+                            </div>
+
+                            <ul class="project-features">
+                                <li>Custom product catalog with detailed descriptions and high-quality images</li>
+                                <li>M-Pesa payment integration for seamless local transactions</li>
+                                <li>Performance optimization with caching and image optimization</li>
+                                <li>Mobile-responsive design with cross-browser compatibility</li>
+                                <li>Secure checkout process with scalable architecture</li>
+                            </ul>
+
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">40%</span>
+                                    <span class="stat-label">Load Time Reduction</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">100%</span>
+                                    <span class="stat-label">Mobile Responsive</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">SEO</span>
+                                    <span class="stat-label">Optimized</span>
+                                </div>
+                            </div>
+
+                            <a href="https://www.blackbeaninteriors.co.ke" class="project-link" target="_blank">
+                                View Live Site <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title">
+                                <i class="fas fa-tags"></i>
+                                Label Me Pantry
+                            </div>
+                            <div class="project-url">
+                                <i class="fas fa-external-link-alt"></i>
+                                www.labelmepantry.com
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-description">WordPress WooCommerce with Custom Features</div>
+                            <div class="project-summary">
+                                Online store specializing in high-quality uniform labels with dynamic customization
+                                features, real-time preview functionality, and integrated M-Pesa payments for enhanced
+                                user experience.
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <div class="tech-stack-title">Technologies Used</div>
+                                <div class="tech-tags">
+                                    <span class="tech-tag">WordPress</span>
+                                    <span class="tech-tag">WooCommerce</span>
+                                    <span class="tech-tag">JavaScript</span>
+                                    <span class="tech-tag">M-Pesa API</span>
+                                    <span class="tech-tag">PHP</span>
+                                    <span class="tech-tag">Custom CSS</span>
+                                </div>
+                            </div>
+
+                            <ul class="project-features">
+                                <li>Dynamic label customization with real-time preview functionality</li>
+                                <li>Performance optimization reducing load times by 40%</li>
+                                <li>Secure M-Pesa payment integration for reliable transactions</li>
+                                <li>Mobile-responsive design with SEO optimization</li>
+                                <li>Scalable architecture with comprehensive security measures</li>
+                            </ul>
+
+                            <div class="project-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">40%</span>
+                                    <span class="stat-label">Faster Load Times</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">Real-time</span>
+                                    <span class="stat-label">Preview</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">Secure</span>
+                                    <span class="stat-label">Payments</span>
+                                </div>
+                            </div>
+
+                            <a href="https://www.labelmepantry.com" class="project-link" target="_blank">
+                                View Live Site <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="fade-in">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Let's Work Together</h2>
+                    <p>Ready to bring your WordPress project to life? Get in touch for a consultation</p>
+                </div>
+
+                <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                    <div class="contact-info" style="justify-content: center; margin-bottom: 3rem;">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+254 726 223 788</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>ndegwamoche@gmail.com</span>
+                        </div>
+                    </div>
+
+                    <div class="cta-buttons" style="justify-content: center;">
+                        <a href="mailto:ndegwamoche@gmail.com" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i>
+                            Send Email
+                        </a>
+                        <a href="tel:+254726223788" class="btn btn-outline">
+                            <i class="fas fa-phone"></i>
+                            Call Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3>Martin Ndegwa Moche</h3>
+                    <p>WordPress Developer | Nairobi, Kenya</p>
+                </div>
+                <div class="social-links">
+                    <a href="https://linkedin.com/in/ndegwamoche" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:ndegwamoche@gmail.com">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="tel:+254726223788">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                </div>
+            </div>
+            <div style="border-top: 1px solid #374151; padding-top: 2rem; color: #9CA3AF;">
+                <p>&copy; 2025 Martin Ndegwa Moche. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to system preference
+        function getPreferredTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        // Set theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                body.removeAttribute('data-theme');
+                themeIcon.className = 'fas fa-moon';
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme
+        setTheme(getPreferredTheme());
+
+        // Theme toggle event listener
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // Mobile menu functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu when clicking on nav links
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header background on scroll - Updated to support dark mode
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const isDarkMode = body.getAttribute('data-theme') === 'dark';
+
+            if (window.scrollY > 100) {
+                if (isDarkMode) {
+                    header.style.background = 'rgba(31, 41, 55, 0.98)';
+                    header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.98)';
+                    header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                }
+            } else {
+                header.style.background = 'var(--header-bg)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect when page loads
+        window.addEventListener('load', () => {
+            const heroTitle = document.querySelector('.hero-text h1');
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 80);
+        });
+
+        // Add scroll indicator
+        function createScrollIndicator() {
+            const indicator = document.createElement('div');
+            indicator.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 4px;
+                background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+                z-index: 9999;
+                transition: width 0.3s ease;
+            `;
+            document.body.appendChild(indicator);
+
+            window.addEventListener('scroll', () => {
+                const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                indicator.style.width = scrolled + '%';
+            });
+        }
+
+        createScrollIndicator();
+    </script>
+</body>
+
+</html>

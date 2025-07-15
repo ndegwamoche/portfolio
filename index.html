@@ -178,31 +178,51 @@
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
-            flex-direction: column;
             cursor: pointer;
             padding: 5px;
             z-index: 1001;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
-        .mobile-menu-toggle span {
+        .mobile-menu-toggle .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 18px;
+        }
+
+        .mobile-menu-toggle .hamburger span {
             width: 25px;
             height: 3px;
             background: var(--text-dark);
-            margin: 3px 0;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             border-radius: 2px;
         }
 
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
+        .mobile-menu-toggle.active .hamburger {
+            display: none;
         }
 
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
+        .mobile-menu-toggle.active .close-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-dark);
         }
 
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+        .mobile-menu-toggle .close-icon {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* Mobile Menu Overlay */
@@ -253,7 +273,7 @@
 
         .mobile-nav-links {
             list-style: none;
-            padding: 0;
+            padding: 40px 0;
         }
 
         .mobile-nav-links li {
@@ -345,8 +365,8 @@
         }
 
         .contact-item a {
+            color: var(--text-light);
             text-decoration: none;
-            color: var(---text-light);
         }
 
         .hero-image {
@@ -975,6 +995,7 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
+
         <ul class="mobile-nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -997,9 +1018,12 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <i class="fas fa-times close-icon"></i>
             </div>
         </nav>
     </header>
@@ -1301,8 +1325,7 @@
                         </div>
                         <div class="project-content">
                             <div class="project-description">Elegant Interior Design WooCommerce Store</div>
-                            <div class="project-user agent
-                            project-summary">
+                            <div class="project-summary">
                                 Built an elegant, fast, and user-friendly eCommerce website for interior design
                                 solutions in Nairobi, Kenya, featuring custom product displays and M-Pesa payment
                                 integration for local customers.
@@ -1535,7 +1558,14 @@
             document.body.style.overflow = '';
         }
 
-        mobileMenuToggle.addEventListener('click', openMobileMenu);
+        mobileMenuToggle.addEventListener('click', () => {
+            if (mobileMenuToggle.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
         // Close mobile menu when clicking on nav links

@@ -141,6 +141,23 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .logo-text {
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
+
+        .logo-tagline {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-top: 0.2rem;
+            line-height: 1.2;
         }
 
         .nav-links {
@@ -184,7 +201,6 @@
             z-index: 1001;
             width: 35px;
             height: 35px;
-            display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
@@ -330,6 +346,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: normal;
         }
 
         .hero-text .subtitle {
@@ -873,6 +890,15 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
+
+            .logo-text {
+                font-size: 1.3rem;
+            }
+
+            .logo-tagline {
+                font-size: 0.8rem;
+            }
+
             .theme-toggle {
                 top: 80px;
                 right: 15px;
@@ -949,6 +975,20 @@
             }
         }
 
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: none;
+            }
+
+            .mobile-menu-overlay {
+                display: none;
+            }
+        }
+
         /* Animation Classes */
         .fade-in {
             opacity: 0;
@@ -1001,7 +1041,6 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-
         <ul class="mobile-nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -1014,7 +1053,10 @@
 
     <header>
         <nav class="container">
-            <div class="logo">Moche Dev</div>
+            <div class="logo">
+                <div class="logo-text">Martin Moche</div>
+                <span class="logo-tagline">WordPress Plugin & WooCommerce Developer</span>
+            </div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -1039,8 +1081,7 @@
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-text slide-in-left">
-                        <h1>Martin Ndegwa Moche</h1>
-                        <div class="subtitle">WordPress Developer</div>
+                        <h1>Passionate about creating exceptional web experiences</h1>
                         <p>Dynamic and innovative WordPress Developer with 15+ years of experience crafting top-tier,
                             efficient websites. Specializing in custom themes, plugins, and leveraging AI tools to
                             streamline workflows and deliver exceptional results.</p>
@@ -1662,13 +1703,6 @@
             }
             type();
         }
-
-        // Initialize typing effect when page loads
-        window.addEventListener('load', () => {
-            const heroTitle = document.querySelector('.hero-text h1');
-            const originalText = heroTitle.textContent;
-            typeWriter(heroTitle, originalText, 80);
-        });
 
         // Add scroll indicator
         function createScrollIndicator() {
